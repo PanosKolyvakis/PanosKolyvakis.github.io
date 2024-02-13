@@ -78,38 +78,33 @@
                     <header class="entry-header">
                         <h1 class="entry-title">A very memorable and interesting coding/Math Challenge</h1>
                     </header>
-                    <div class="entry-content">
-                        <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
+			<div class="entry-content">
+			    <p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
+			    <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
+			    <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
+			    <p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
+			    <p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
+			    <p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
+			    <p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
+			    <p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
+			</div>
+			
+			<!-- Correctly separate the Python code block -->
+			<pre><code>import numpy as np
+			
+			def expected_throws(n, r):
+			    """
+			    Calculate the expected number of throws until at least one die is greater than r.
+			    Args:
+			        n (int): Number of dice.
+			        r (int): Threshold value.
+			    Returns:
+			        float: Expected number of throws.
+			    """
+			    probability = 1 - (r / 6) ** n
+			    return 1 / probability
+			</code></pre>
 
-                        <h2>Chapter 1: Unraveling the Problem Mathematically</h2>
-                        <p>Consider the following problem:
-			You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
-                        <pre><code>
-
-			<p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
-			<p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
-			<p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
-			<p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
-			<p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
-			<p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
-			<p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
-			<p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
-		    </div>
-
-import numpy as np
-
-def expected_throws(n, r):
-    """
-    Calculate the expected number of throws until at least one die is greater than r.
-    Args:
-        n (int): Number of dice.
-        r (int): Threshold value.
-    Returns:
-        float: Expected number of throws.
-    """
-    probability = 1 - (r / 6) ** n
-    return 1 / probability
-                        </code></pre>
 
                         <h2>Chapter 2: Validating with Monte Carlo Simulation</h2>
                         <p>The beauty of Monte Carlo simulations lies in their ability to emulate and dissect complex probabilistic scenarios, offering a practical counterpart to our theoretical musings. By simulating this dice-throwing game, we can approximate the expected number of throws, affirming the robustness of our mathematical findings.</p>
