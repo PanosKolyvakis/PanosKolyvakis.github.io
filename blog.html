@@ -5,7 +5,9 @@
     <meta name="viewport"    content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
-    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <title>Blog | Panos Kolyvakis</title>
 
     <link rel="shortcut icon" href="assets/images/gt_favicon.png">
@@ -87,15 +89,15 @@
                         <pre><code>
 
 			<p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
-                        <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
-                        <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
-                        <p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
-                        <p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
-                        <p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
-                        <p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
-                        <p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
+			<p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
+			<p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
+			<p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
+			<p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
+			<p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
+			<p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
+			<p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
 				
-			<h2>Putting this into python code</h2>
+
 import numpy as np
 
 def expected_throws(n, r):
