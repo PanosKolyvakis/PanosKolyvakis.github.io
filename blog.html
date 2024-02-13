@@ -28,26 +28,21 @@
         <h1 id="logo" class="text-center">
             <img class="img-circle" src="assets/images/panos.png" alt="">
             <span class="title" style="color: rgb(255, 255, 255);">Dr Panos Kolyvakis</span>
-            <span class="tagline" style="color: rgb(255, 255, 255);">Exploring the Convergence of Analytical Precision and Innovative Thought<br>
-            </span>
+            <span class="tagline" style="color: rgb(255, 255, 255);">Exploring the Convergence of Analytical Precision and Innovative Thought<br></span>
         </h1>
     </div>
 
     <nav class="navbar navbar-default navbar-sticky">
         <div class="container-fluid">
-            
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
             </div>
-            
             <div class="navbar-collapse collapse">
-                
                 <ul class="nav navbar-nav">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">Education and Work Experience</a></li>
                     <li class="active"><a href="blog.html">Blog</a></li>
                 </ul>
-            
             </div><!--/.nav-collapse -->            
         </div>    
     </nav>
@@ -62,7 +57,7 @@
                         <h1 class="entry-title">Welcome to My Blog</h1>
                     </header>
                     <div class="entry-content">
-                        <p>Welcome to my blog! Stay tuned for updates on my projects, research, and insights into the world of physical sciences, programming, and data science.</p>
+                        <p>Welcome to my blog! Stay tuned for updates on my projects, research, and insights into the world of physical sciences, programming and data science.</p>
                     </div>
                 </article>
             </div> 
@@ -81,13 +76,12 @@
                         <h1 class="entry-title" style="font-size: 20px;">An interesting coding/Math Challenge</h1>
                         <p class="post-date">January 13, 2024</p>
                     </header>
-                    <div class="entry-content" style="font-size: 20px;">
+                    <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
                         <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
                         <h2>Unraveling the Problem Probabilistically</h2>
-                        <p>Consider the following problem:
-                        You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
+                        <p>Consider the following problem: You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
                     </div>
-                    <div class="entry-content" style="font-size: 20px;">
+                    <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
                         <p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
                         <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
                         <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
@@ -132,7 +126,8 @@ def simulate_throws(n, r, trials=10000):
         </div>
     </div>
 </div> <!-- /container -->
-<!-- Correction: Removed extraneous By: Panos Kolyvakis outside of main tags -->
+</main>
+
 <footer id="footer">
     <div class="container">
         <div class="row">
@@ -163,7 +158,6 @@ def simulate_throws(n, r, trials=10000):
                     <a href="assets/WebCVPK.pdf" class="btn btn-action" download>Download CV</a>
                 </div>
             </div>
-
         </div> <!-- /row of widgets -->
     </div>
 </footer>
@@ -171,10 +165,8 @@ def simulate_throws(n, r, trials=10000):
 <footer id="underfooter">
     <div class="container">
         <div class="row">
-            
             <div class="col-md-6 widget">
                 <div class="widget-body">
-
                 </div>
             </div>
 
@@ -184,7 +176,6 @@ def simulate_throws(n, r, trials=10000):
                         Copyright &copy; 2024, Panos Kolyvakis<br>
                 </div>
             </div>
-
         </div> <!-- /row of widgets -->
     </div>
 </footer>
@@ -195,4 +186,5 @@ def simulate_throws(n, r, trials=10000):
 <script src="assets/js/template.js"></script>
 </body>
 </html>
+
 
