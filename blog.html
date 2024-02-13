@@ -76,8 +76,16 @@
             <div class="col-sm-8 col-sm-offset-2">
                 <article class="post">
                     <header class="entry-header">
-                        <h1 class="entry-title">A very memorable and interesting coding/Math Challenge</h1>
+                        <h1 class="entry-title">An interesting coding/Math Challenge</h1>
+			<p class="post-date">January 13, 2024</p>
                     </header>
+			<div class="entry-content">
+			    <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
+			
+			    <h2>Unraveling the Problem Probabilistically</h2>
+			    <p>Consider the following problem:
+			    You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
+			</div>
 			<div class="entry-content">
 			    <p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
 			    <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
@@ -109,22 +117,21 @@
                         <h2>Chapter 2: Validating with Monte Carlo Simulation</h2>
                         <p>The beauty of Monte Carlo simulations lies in their ability to emulate and dissect complex probabilistic scenarios, offering a practical counterpart to our theoretical musings. By simulating this dice-throwing game, we can approximate the expected number of throws, affirming the robustness of our mathematical findings.</p>
                         <pre><code>
-def simulate_throws(n, r, trials=10000):
-    """
-    Simulate the expected number of throws using Monte Carlo method.
-    Args:
-        n (int): Number of dice.
-        r (int): Threshold value.
-        trials (int): Number of simulation trials.
-    Returns:
-        float: Simulated expected number of throws.
-    """
-    counts = [np.random.randint(1, 7, n).max() > r for _ in range(trials)]
-    return np.mean(counts)
+			import random
+			def simulate_throws(n, r, trials=10000):
+			    """
+			    Simulate the expected number of throws using Monte Carlo method.
+			    Args:
+			        n (int): Number of dice.
+			        r (int): Threshold value.
+			        trials (int): Number of simulation trials.
+			    Returns:
+			        float: Simulated expected number of throws.
+			    """
+			    counts = [np.random.randint(1, 7, n).max() > r for _ in range(trials)]
+			    return np.mean(counts)
                         </code></pre>
 
-                        <h2>Conclusion</h2>
-                        <p>This inquiry not only sheds light on the intricate dance between theory and simulation but also underscores the importance of integrating diverse problem-solving methodologies. In traversing the realms of abstract mathematical concepts and grounded simulation techniques, we unlock a deeper understanding of probability and its applications in the computational universe.</p>
                     </div>
                 </article>
             </div>
