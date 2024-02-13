@@ -76,14 +76,26 @@
             <div class="col-sm-8 col-sm-offset-2">
                 <article class="post">
                     <header class="entry-header">
-                        <h1 class="entry-title">A Deep Dive into a Unique Coding/Math Challenge</h1>
+                        <h1 class="entry-title">A very memorable and interesting coding/Math Challenge</h1>
                     </header>
                     <div class="entry-content">
-                        <p>Throughout my journey in the realms of coding and mathematics, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
+                        <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
 
                         <h2>Chapter 1: Unraveling the Problem Mathematically</h2>
-                        <p>This problem asks us to determine the expected number of throws until at least one die shows a number greater than a given threshold when multiple dice are thrown simultaneously. Mathematically, this can be explored through the lens of geometric distribution, which effectively quantifies the expected trials to achieve the first success in a series of Bernoulli trials.</p>
+                        <p>Consider the following problem:
+			You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
                         <pre><code>
+
+			<p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
+                        <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
+                        <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
+                        <p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
+                        <p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
+                        <p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
+                        <p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
+                        <p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
+				
+			<h2>Putting this into python code</h2>
 import numpy as np
 
 def expected_throws(n, r):
