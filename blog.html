@@ -8,7 +8,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <title>Blog | Panos Kolyvakis</title>
+    <title>Blog | [Your Title Here]</title>
 
     <link rel="shortcut icon" href="assets/images/gt_favicon.png">
 
@@ -16,11 +16,23 @@
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+    <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+    <!-- Bootstrap -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+
 
     <!-- Custom styles -->
     <link rel="stylesheet" href="assets/css/styles.css">
-
-    <!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+    <style>
+        .navbar-default {
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 0;
+            z-index: 1000; /* Ensures it stays on top of other content */
+            background-color: white; /* Or any color you prefer */
+            border-bottom: solid 1px #ddd; /* Optional: adds a slight border */
+        }
+    </style>
 </head>
 <body>
 <header id="header">
@@ -31,20 +43,24 @@
             <span class="tagline" style="color: rgb(255, 255, 255);">Exploring the Convergence of Analytical Precision and Innovative Thought<br></span>
         </h1>
     </div>
-
-    <nav class="navbar navbar-default navbar-sticky">
+    <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">Education and Work Experience</a></li>
+                    <li><a href="about.html">Education and work experience</a></li>
                     <li class="active"><a href="blog.html">Blog</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->            
-        </div>    
+            </div><!--/.nav-collapse -->
+        </div>
     </nav>
 </header>
 
@@ -65,37 +81,74 @@
     </div>  <!-- /container -->
 </main>
     
-<hr>
-    
+<hr style="height: 3px;">
 <main id="main">
     <div class="container">
         <div class="row topspace">
-            <div class="col-sm-8 col-sm-offset-2">
-                <article class="post">
-                    <header class="entry-header">
-                        <h1 class="entry-title" style="font-size: 30px;">An interesting coding/Math Challenge</h1>
-                        <p class="post-date">January 13, 2024</p>
-                    </header>
-                    <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
-                        <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
-                        <h2>Unraveling the Problem Probabilistically</h2>
-                        <p>Consider the following problem: You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
-                    </div>
-                    <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
-                        <p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
-                        <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
-                        <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
-                        <p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
-                        <p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
-                        <p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
-                        <p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
-                        <p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
-                    </div>
-                    <!-- Correctly separate the Python code block -->
-                    <pre><code>import numpy as np
+            <!-- Sidebar for Blog Posts Links -->
+            <aside class="col-sm-4 sidebar sidebar-right">
+                <ul class="nav text-right nav-side">
+                    <li><a href="#MyObsessionWithHighQualityDocs" style="color: #000000; font-size: 14px;">My Obsession with High-Quality Docs</a></li>
+                    <li><a href="#AnInterestingCodingMathChallenge" style="color: #000000; font-size: 14px;">An Interesting Coding/Math Challenge</a></li>
+                </ul>
+                
+            </aside>
+            <!-- Article main content -->
+            <article class="col-sm-8 maincontent">
+                <section id="MyObsessionWithHighQualityDocs">
 
+                    <article class="post">
+                        <header class="entry-header">
+                            <h2 class="entry-title" style="font-size: 30px;">My obsession with High quality docs</h2>
+                            <p class="post-date" style="color: rgb(160, 0, 0);">February 12, 2024</p>
+                        </header>
+                        <div class="entry-content" style="font-size: 16px;">
+                            <p>From a young age, I've had a profound appreciation for exemplary documentation. My fascination was significantly influenced during my undergraduate studies, particularly in a Statistical Thermodynamics course led by Professor Philip Camp. His methodological approach and the exceptional quality of his lecture notes simplified complex theories, setting a benchmark in educational excellence.</p>
+                            <p>While Microsoft Excel stands out as a versatile tool, Microsoft Word often falls short in facilitating high-quality documentation. My extensive experience with Word has been marked by challenges in achieving the desired precision and clarity. Conversely, LaTeX, especially platforms like <a href="https://www.overleaf.com/" target="_blank" rel="noopener noreferrer">Overleaf</a>, emerges as the superior choice for crafting documents that meet high academic and professional standards. Professor Camp's utilization of LaTeX to produce unparalleled lecture notes exemplifies its efficacy.</p>
+                            
+                            <div style="text-align:center; margin: 20px 0;">
+                                <figure>
+                                    <img src="assets/images/AI_LaTeX.png" alt="Placeholder Image" style="max-width:100%;">
+                                    <figcaption>My AI to LaTeX WebUI interface so far</figcaption>
+                                </figure>
+                            </div>
+                            
+                            <p>LaTeX, despite its steep learning curve and the occasional frustration when errors prevent document compilation, offers unparalleled control over document formatting. Recognizing the evolving landscape of technology and the increasing relevance of accessible high-quality documentation, I am currently developing a project aimed at democratizing this power of documentation. This endeavor, still in its infancy, aims to bridge the gap between professional formatting and user-friendly interfaces, making LaTeX's capabilities accessible to all.</p>
+                            <!-- Placeholder for an image -->
+                            <p>This project is not just a tool for seasoned LaTeX users but a gateway for novices, to embrace the art of professional document creation without the intricacies of traditional coding. It's a glimpse into the future where document formatting is no longer a barrier to quality. Please visit my projects section for more information.</p>
+                        </div>
+                    </article>
+
+
+<hr style="height: 20px;">
+                </section>
+                <section id="AnInterestingCodingMathChallenge">
+                    <article class="post">
+                        <header class="entry-header">
+                            <h2 class="entry-title" style="font-size: 30px;">An interesting coding/Math Challenge</h2>
+                            <p class="post-date" style="color: rgb(160, 0, 0);">January 13, 2024</p>
+                        </header>
+                        <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
+                            <p>Throughout my journey in solving coding and math problems, I've stumbled upon various questions that sparked my curiosity and tested my analytical prowess. Yet, there's one particular challenge that has significantly resonated with me. It involves the intriguing world of dice and probabilities—a question so captivating, I feel compelled to share its essence and the insights I've garnered from it.</p>
+                            <h3 style="font-size: 20px;">Unraveling the Problem Probabilistically</h3>
+                            <p>Consider the following problem: You have n 6-sided-dice and you decide to play a game: You throw all dice consecutively until any of the dice exceed a value 'r'. Write a function that returns the expected number of throws. Before reading along you are more than welcome to try and attack the problem yourself.</p>
+                        </div>
+                        <div class="entry-content" style="font-size: 16px;"> <!-- Adjusted font size -->
+                            <p>The probability \(P\) that a single die will roll a number greater than a threshold \(r\) can be calculated as:</p>
+                            <p>\[P(\text{die} > r) = \frac{6 - r}{6}\]</p>
+                            <p>Given \(n\) dice, the probability that all dice show a number less than or equal to \(r\) is:</p>
+                            <p>\[P(\text{all} \leq r) = \left(\frac{r}{6}\right)^n\]</p>
+                            <p>Thus, the probability of at least one die showing a number greater than \(r\) in a single throw of \(n\) dice is the complement:</p>
+                            <p>\[P(\text{at least one} > r) = 1 - \left(\frac{r}{6}\right)^n\]</p>
+                            <p>The expected number of throws until achieving a success follows the geometric distribution with mean \(\frac{1}{p}\), where \(p\) is the probability of success on a single throw. Therefore, the expected number of throws \(E\) is:</p>
+                            <p>\[E = \frac{1}{P(\text{at least one} > r)} = \frac{1}{1 - \left(\frac{r}{6}\right)^n}\]</p>
+                        </div>
+                        <!-- Correctly separate the Python code block -->
+                        <pre><code>
+import numpy as np
+    
 def expected_throws(n, r):
-    """
+"""
     Calculate the expected number of throws until at least one die is greater than r.
     Args:
         n (int): Number of dice.
@@ -105,86 +158,72 @@ def expected_throws(n, r):
     """
     probability = 1 - (r / 6) ** n
     return 1 / probability</code></pre>
-                    <h2>Validating with Monte Carlo Simulation</h2>
-                    <p>The beauty of Monte Carlo simulations lies in their ability to emulate and dissect complex probabilistic scenarios, offering a practical counterpart to our mathematical interpretation. By simulating this dice-throwing game, we can approximate the expected number of throws, affirming the robustness of our mathematical findings.</p>
-                    <pre><code>import random
+                        <h3 style="font-size: 20px;">Validating with Monte Carlo Simulation</h3>
 
+                        <p>The beauty of Monte Carlo simulations lies in their ability to emulate and dissect complex probabilistic scenarios, offering a practical counterpart to our mathematical interpretation. By simulating this dice-throwing game, we can approximate the expected number of throws, affirming the robustness of our mathematical findings.</p>
+                        <pre><code>
+import random
+    
 def simulate_throws(n, r, trials=10000):
-    """
-    Simulate the expected number of throws using Monte Carlo method.
-    Args:
-        n (int): Number of dice.
-        r (int): Threshold value.
-        trials (int): Number of simulation trials.
-    Returns:
-        float: Simulated expected number of throws.
-    """
-    counts = [np.random.randint(1, 7, n).max() > r for _ in range(trials)]
-    return np.mean(counts)</code></pre>
-                </div>
+        """
+        Simulate the expected number of throws using Monte Carlo method.
+        Args:
+            n (int): Number of dice.
+            r (int): Threshold value.
+            trials (int): Number of simulation trials.
+        Returns:
+            float: Simulated expected number of throws.
+        """
+        counts = [np.random.randint(1, 7, n).max() > r for _ in range(trials)]
+        return np.mean(counts)</code></pre>
+                    
+                        </div>
+                    </article>
+
+                </section>
             </article>
         </div>
     </div>
-</div> <!-- /container -->
 </main>
 
 <footer id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 widget">
-                <h3 class="widget-title">Contact</h3>
-                <div class="widget-body">
-                    <p>UK: +44 7599651897<br>GR: +30 6974434583<br>
-                        <a href="mailto:panoskolyvakis@gmail.com">panoskolyvakis@gmail.com</a>
-                    </p>    
-                </div>
-            </div>
-
-            <div class="col-md-4 widget">
-                <h3 class="widget-title text-center">Links and Things</h3>
-                <div class="widget-body">
-                    <p class="follow-me-icons" style="display: flex; justify-content: center;">
-                        <a href="https://github.com/PanosKolyvakis"><i class="fa fa-github fa-2"></i></a>
-                        <a href="https://www.linkedin.com/in/panos-kolyvakis-66863421a/"><i class="fa fa-linkedin fa-2"></i></a>
-                        <a href="https://www.facebook.com/panos.kolyvakis"><i class="fa fa-facebook fa-2"></i></a>
-                        <a href="https://leetcode.com/panoskolyvakis/"><i class="fa fa-code fa-2"></i></a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4 widget">
-                <h3 class="widget-title text-center">Download CV</h3>
-                <div class="widget-body text-center">
-                    <a href="assets/WebCVPK.pdf" class="btn btn-action" download>Download CV</a>
-                </div>
-            </div>
-        </div> <!-- /row of widgets -->
-    </div>
+    <!-- Footer Content -->
 </footer>
 
 <footer id="underfooter">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 widget">
-                <div class="widget-body">
-                </div>
-            </div>
-
-            <div class="col-md-6 widget">
-                <div class="widget-body">
-                    <p class="text-right">
-                        Copyright &copy; 2024, Panos Kolyvakis<br>
-                </div>
-            </div>
-        </div> <!-- /row of widgets -->
-    </div>
+    <!-- Under Footer Content -->
 </footer>
 
-<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<!-- JavaScript at the end for faster page loading -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="assets/js/template.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
