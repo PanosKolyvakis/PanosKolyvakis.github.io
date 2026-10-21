@@ -42,7 +42,7 @@
         <a href="about.html">Experience</a>
         <a href="blog.html">Writing</a>
         <a href="#contact">Contact</a>
-        <a class="btn btn-primary btn-sm" href="assets/WebCVPK.pdf" download>
+        <a class="btn btn-primary btn-sm" href="assets/PanosKolyvakisCV.pdf" download="PanosKolyvakisCV.pdf">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>CV
         </a>
       </nav>
@@ -57,7 +57,7 @@
           <h1>Dr Panos Kolyvakis</h1>
           <p class="lede">I build and govern agentic AI: an enterprise agent framework from scratch, and policy-as-code guardrails that turn business rules into enforceable decisions. Before that, multimodal LLMs in FinTech and RAG systems in R&amp;D, on a foundation of a PhD and lecturing engineering at the University of Edinburgh.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="assets/WebCVPK.pdf" download>
+            <a class="btn btn-primary" href="assets/PanosKolyvakisCV.pdf" download="PanosKolyvakisCV.pdf">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Download CV
             </a>
             <a class="btn" href="mailto:panoskolyvakis@gmail.com">
@@ -176,18 +176,14 @@ allow <span class="k">if</span> {
           </article>
 
           <article class="card reveal">
-            <div class="card-media is-illustration" role="img" aria-label="Illustrative architecture: an orchestrator calls tools through an MCP gateway and registry, with telemetry flowing to Prometheus and Grafana">
-              <svg class="mini-arch" viewBox="0 0 560 232" aria-hidden="true">
-                <g class="box"><rect x="16" y="86" width="104" height="60" rx="10"/><text x="68" y="112">Agent</text><text class="s" x="68" y="130">memory · tools</text></g>
-                <g class="box accent"><rect x="160" y="86" width="116" height="60" rx="10"/><text x="218" y="112">Orchestrator</text><text class="s" x="218" y="130">function calling</text></g>
-                <g class="box"><rect x="316" y="86" width="104" height="60" rx="10"/><text x="368" y="112">MCP Gateway</text><text class="s" x="368" y="130">+ Registry</text></g>
-                <g class="box"><rect x="460" y="24" width="84" height="40" rx="8"/><text x="502" y="49">MCP server</text></g>
-                <g class="box"><rect x="460" y="96" width="84" height="40" rx="8"/><text x="502" y="121">MCP server</text></g>
-                <g class="box"><rect x="460" y="168" width="84" height="40" rx="8"/><text x="502" y="193">MCP server</text></g>
-                <g class="line"><path d="M120 116h40M276 116h40M420 116c20 0 20-72 40-72M420 116h40M420 116c20 0 20 72 40 72"/></g>
-                <g class="box dim"><rect x="140" y="180" width="160" height="36" rx="8"/><text x="220" y="203">OTel → Prometheus · Mimir</text></g>
-                <g class="line dash"><path d="M218 146v34"/></g>
-              </svg>
+            <div class="card-media is-illustration" role="img" aria-label="Illustrative trace of one agent run: planning, two tool calls through MCP servers, and the response, with timings">
+              <div class="mini-trace">
+                <div class="mt-head"><span>agent.run</span><span>trace · 1.84 s</span></div>
+                <div class="mt-row"><span class="mt-name">plan</span><span class="mt-svc">orchestrator</span><span class="mt-track"><i style="left:0;width:12%"></i></span></div>
+                <div class="mt-row"><span class="mt-name">tool_call</span><span class="mt-svc">mcp · search</span><span class="mt-track"><i class="t" style="left:12%;width:34%"></i></span></div>
+                <div class="mt-row"><span class="mt-name">tool_call</span><span class="mt-svc">mcp · knowledge</span><span class="mt-track"><i class="t" style="left:14%;width:21%"></i></span></div>
+                <div class="mt-row"><span class="mt-name">respond</span><span class="mt-svc">llm</span><span class="mt-track"><i style="left:48%;width:52%"></i></span></div>
+              </div>
               <span class="mini-label">Illustrative</span>
             </div>
             <div class="card-body">
@@ -364,7 +360,8 @@ allow <span class="k">if</span> {
           <p class="lede contact-lede">Open to conversations about data science, LLM applications and research collaborations. Email is the quickest way to reach me.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="mailto:panoskolyvakis@gmail.com">Email me</a>
-            <a class="btn" href="assets/WebCVPK.pdf" download>Download CV</a>
+            <a class="btn" href="assets/PanosKolyvakisCV.pdf" target="_blank" rel="noopener">View CV</a>
+            <a class="btn" href="assets/PanosKolyvakisCV.pdf" download="PanosKolyvakisCV.pdf">Download CV</a>
           </div>
         </div>
         <div class="contact-card">

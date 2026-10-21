@@ -12,7 +12,7 @@ blog.html             writing (MathJax for maths, highlight.js for code)
 assets/css/site.css   all styles (light and dark themes follow the system setting)
 assets/js/site.js     mobile menu, scroll effects, table-of-contents highlight
 assets/img/           images (resized for the web) and the favicon
-assets/WebCVPK.pdf    CV
+assets/PanosKolyvakisCV.pdf  CV (assets/WebCVPK.pdf kept as a copy for old links)
 LaTeX.mp4             demo video used in the blog
 ```
 
