@@ -52,8 +52,8 @@
         <h1>Q&amp;AI: retrieval-augmented search that lands on the exact second.</h1>
         <p>Ask a public figure a question and Q&amp;AI plays the moment in a real interview where they answer it, with the transcript quoted underneath. The language models never write the answer: they rewrite the query and choose among real passages, and a deterministic aligner maps the chosen passage back to word-level timestamps.</p>
         <div class="case-meta">
-          <span><strong>Role</strong> Retrieval, evaluation &amp; data pipeline</span>
-          <span><strong>Team</strong> Small team, private repository</span>
+          <span><strong>Role</strong> Sole developer: design, build &amp; evaluation</span>
+          <span><strong>Code</strong> Private repository</span>
           <span><strong>Stack</strong> Python · Flask · Chroma · Sentence-Transformers · Groq · Whisper</span>
           <span><strong>Updated</strong> October 2026</span>
         </div>
@@ -107,39 +107,30 @@
 
       <section id="ingestion">
         <h2>1 · Ingestion</h2>
-        <h3>Transcripts with word-level timing</h3>
-        <p>Every downstream step depends on knowing when each word was spoken, so transcripts are stored as segments of words with start and end times:</p>
+        <p>Everything downstream depends on knowing when each word was spoken, so transcripts are stored as segments of words with start and end times:</p>
 <pre><code class="language-json">[{"start": 16.22, "end": 20.88, "text": "You never know what's going to cause the next…",
   "words": [{"word": "You",   "start": 16.22, "end": 16.66},
             {"word": "never", "start": 16.66, "end": 16.84}, …]}]</code></pre>
-        <p>Three sources feed this format:</p>
         <ul>
-          <li><strong>YouTube's speech-recognition captions.</strong> The <code>json3</code> caption format carries a per-word offset (<code>tOffsetMs</code>) inside each caption event, so word timings can be read directly, with no audio download. Against Whisper on the same video, word start and end times agreed to a median of 0.05 s, with 99% of words within 1 s. Markup such as <code>&gt;&gt;</code> speaker changes and <code>[music]</code> tags (which can span several tokens) is stripped.</li>
-          <li><strong>Hand-made captions, merged in.</strong> Speech-recognition captions have no punctuation. Where a video also has hand-made captions, the two word sequences are aligned with <code>difflib.SequenceMatcher</code> on accent- and punctuation-folded tokens, and matched words take the punctuated, capitalised form while keeping the recognition timings (90–100% of words matched in practice).</li>
-          <li><strong>Whisper, for videos with no captions.</strong> Long live streams often have none. Audio-only streams are downloaded, resampled to 16 kHz mono Opus, cut into 10-minute pieces and transcribed in parallel with <code>whisper-large-v3</code> on Groq with word timestamps (about 6 s per 10 minutes of audio). Piece offsets are added back, overlapping word times are forced monotonic, and known Whisper hallucinations in silence (e.g. Greek "Υπότιτλοι AUTHORWAVE") are dropped.</li>
-        </ul>
-
-        <h3>Keeping the catalogue clean</h3>
-        <ul>
-          <li><strong>Playability.</strong> A video that can't be embedded is worse than no answer. Candidates are filtered with the Data API (privacy status, <code>embeddable</code>, age restriction, region blocking) and spot-checked in the real IFrame player, where unplayable videos fail fast with error 150. The API alone caught 17 of 18 player failures with no false alarms. 32 already-indexed videos that no longer played were removed.</li>
-          <li><strong>Duplicates.</strong> Interviews are re-uploaded by many channels. Each transcript is reduced to its set of 8-word shingles. Two recordings count as the same when ≥ 40% of the <em>shorter</em> one's shingles appear in the other (re-uploads share 50–90%, unrelated videos under 5%). Measuring against the shorter transcript also catches compilations that contain an existing video; the longer recording is kept and the shorter moved aside.</li>
-          <li><strong>Relevance.</strong> For search-based discovery, an LLM classifies each candidate from its metadata as "the person speaks for most of it" or not, which removes news segments, commentary and reaction videos.</li>
+          <li><strong>YouTube captions.</strong> The <code>json3</code> format carries per-word offsets, so timings come without downloading audio; they agree with Whisper to a median of 0.05 s.</li>
+          <li><strong>Hand-made captions, merged in.</strong> Aligned to the recognition captions with <code>difflib</code> so words gain punctuation and capitals but keep their timings.</li>
+          <li><strong>Whisper, when there are no captions.</strong> Audio is cut into 10-minute pieces and transcribed in parallel with <code>whisper-large-v3</code> on Groq (about 6 s per 10 minutes), then stitched back with monotonic word times.</li>
         </ul>
       </section>
 
       <section id="indexing">
         <h2>2 · Indexing</h2>
-        <p>Words are packed greedily into chunks of up to 1000 characters, so chunk text and its word-timing metadata stay in exact correspondence (the timing list is stored as JSON in the chunk's metadata). Each person is a separate Chroma collection with its own embedding model:</p>
+        <p>Words are packed into chunks of up to 1000 characters, with the word timings stored in each chunk's metadata. Each person is a separate Chroma collection with its own embedding model:</p>
         <div class="table-scroll">
           <table class="results">
-            <thead><tr><th>Collection language</th><th>Embedding model</th><th>Dim.</th><th>Why</th></tr></thead>
+            <thead><tr><th>Language</th><th>Embedding model</th><th>Dim.</th><th>Why</th></tr></thead>
             <tbody>
-              <tr><td>English</td><td><code>all-MiniLM-L6-v2</code></td><td>384</td><td>Fast; 82% of chunks fit its 256-token window, the rest lose ~4% of their text</td></tr>
+              <tr><td>English</td><td><code>all-MiniLM-L6-v2</code></td><td>384</td><td>Fast; 82% of chunks fit its 256-token window</td></tr>
               <tr><td>Greek</td><td><code>BAAI/bge-m3</code></td><td>1024</td><td>hit@5 of 90% on Greek questions, vs 56–61% for smaller multilingual models and 8% for MiniLM</td></tr>
             </tbody>
           </table>
         </div>
-        <p>Indexing is incremental and self-healing: on startup each collection embeds only videos it doesn't have, adds a video's chunks in one batched call (so an interrupted build leaves whole videos, never half of one), and deletes the chunks of any video whose transcript has been removed from the folder. bge-m3 runs on the Apple GPU (MPS) when available, about 3× faster than CPU.</p>
+        <p>Indexing is incremental: on startup each collection embeds only new videos, one batched call per video, and drops chunks whose transcripts were removed.</p>
         <figure class="shot">
           <img src="assets/img/qandai/greek-answer.jpg" width="1200" height="682" loading="lazy" alt="Q&amp;AI answering a Greek question about the Fermi paradox: Astronio's video playing from 0:27 with Greek captions, and the matched Greek transcript below">
           <figcaption>The Greek collection: «Τι είναι το παράδοξο του Fermi;» lands on Astronio's explanation at 0:27, retrieved with bge-m3 and quoted in Greek.</figcaption>
@@ -148,32 +139,21 @@
 
       <section id="retrieval">
         <h2>3 · Retrieval</h2>
-        <h3>Query expansion</h3>
-        <p>Questions and answers are phrased differently ("Why did you start SpaceX?" vs "I thought the odds of success were less than 10%"). A small LLM (<code>gpt-oss-20b</code>, low reasoning effort) writes five answers in the person's voice and in the language of their transcripts, so a Greek collection is searched in Greek even if the question is in English. These hypothetical answers act as additional queries.</p>
-        <h3>Weighted reciprocal rank fusion</h3>
-        <p>The original question and the five rewrites are embedded in one batched call and each returns its top 8 chunks. The first version ranked chunks by how many queries returned them; on a sample of 12 questions every top-5 contained ties, so the order the answer model saw was arbitrary. Results are now fused with reciprocal rank fusion, with the original question weighted three times as heavily as a rewrite:</p>
+        <p><strong>Query expansion.</strong> Questions and answers are phrased differently ("Why did you start SpaceX?" vs "I thought the odds of success were less than 10%"). A small LLM (<code>gpt-oss-20b</code>) writes five answers in the person's voice and transcript language, and these act as extra queries.</p>
+        <p><strong>Weighted reciprocal rank fusion.</strong> The question and its rewrites each return their top 8 chunks, fused with the original question weighted three times as heavily:</p>
         <div class="math">\[ s(d) = \sum_{q \in Q} \frac{w_q}{k + \operatorname{rank}_q(d)}, \qquad k = 60,\quad w_{\text{original}} = 3,\quad w_{\text{rewrite}} = 1 \]</div>
-        <p>The weight was chosen by sweeping \(w_{\text{original}} \in \{0, 1, 2, 3, 5\}\) on 150 evaluation questions: hit@1 rose from 58% to 64% at \(w = 3\) with hit@5 at 89%, combining the precision of the literal question with the recall of the rewrites.</p>
-        <h3>Boundary-aware context</h3>
-        <p>Each of the top 5 chunks is passed to the answer model together with the chunk that follows it in the same video (fetched in one batched <code>get</code> by id). This fixed a class of failures where the question ends one chunk and the answer starts the next: "Why did you start SpaceX?" had been returning the three-word fragment "Yes. And to".</p>
+        <p>Sweeping \(w_{\text{original}} \in \{0, 1, 2, 3, 5\}\) on 150 questions, \(w = 3\) lifted hit@1 from 58% to 64% (hit@5 89%), replacing a vote count whose top-5 was full of ties.</p>
+        <p><strong>Boundary-aware context.</strong> Each of the top 5 chunks is passed with the chunk that follows it, fixing answers that start right at a chunk boundary ("Why did you start SpaceX?" had returned just "Yes. And to").</p>
       </section>
 
       <section id="selection">
         <h2>4 · Answer selection</h2>
-        <p>The answer model receives the question and five numbered excerpts and must return <code>&lt;excerpt number&gt;: &lt;verbatim passage&gt;</code>, or a sentinel when nothing is relevant. The prompt constrains it to:</p>
-        <ul>
-          <li>pick the excerpt that answers the question, not one that is merely on topic;</li>
-          <li>start at the first sentence that already answers it (no lead-in, no interviewer question);</li>
-          <li>copy contiguously and verbatim, with no ellipses or edits;</li>
-          <li>prefer passages spoken by the person, and give the closest partial answer rather than none.</li>
-        </ul>
-        <p>The original prompt asked for "a reasonably large subchunk… plenty of context", which pulled clip starts earlier. Prompt variants and Groq-hosted models (gpt-oss-120b, gpt-oss-20b, Qwen 3.6 and Qwen 3.8, with and without thinking) were compared with the LLM-judged harness below; <code>qwen3.8-27b</code> with the new prompt and next-chunk context matched the best model's quality at roughly a seventh of its latency. Calls stream with a 20 s timeout and a single retry; on rate limits, timeouts or 5xx errors the request falls back to <code>gpt-oss-120b</code>, and any leaked <code>&lt;think&gt;</code> blocks are stripped.</p>
+        <p>The answer model gets the question and five numbered excerpts and returns <code>&lt;excerpt&gt;: &lt;verbatim passage&gt;</code>, or a sentinel when nothing fits. It must pick the excerpt that <em>answers</em> the question, start at the first sentence that does, and copy contiguously without edits. Prompts and Groq-hosted models were compared on the LLM-judged harness below: <code>qwen3.8-27b</code> matched the best model's quality at about a seventh of its latency, with <code>gpt-oss-120b</code> as a fallback on rate limits, timeouts or errors.</p>
       </section>
 
       <section id="alignment">
         <h2>5 · Timestamp alignment</h2>
-        <p>The model returns text, not times, and it doesn't copy perfectly. The aligner finds where that text sits in the chunk's word list and returns the first word's start time.</p>
-        <p>The first implementation searched for the quote's <em>first sentence</em> and took its earliest occurrence. Spoken answers often open with "Yeah." or "Okay.", which occur repeatedly in a chunk, so 11.5% of clips started more than 5 s early, by up to 40 s. The current algorithm:</p>
+        <p>The model returns text, not times, and doesn't copy perfectly. The first aligner matched the quote's first sentence at its earliest occurrence; answers often open with "Yeah." or "Okay.", so 11.5% of clips started more than 5 s early. The current one matches 12-word anchors at both ends of the quote, maximised over every position, with near-ties broken by a 48-word window:</p>
 <pre><code class="language-python"># simplified
 def align(quote, words):
     w = [normalize(x.word) for x in words]           # lowercase, strip punctuation and accents
@@ -182,22 +162,8 @@ def align(quote, words):
     j, _     = best_window(w, last[-12:], tiebreak=last[-48:], align="end")
     if score &lt; 60:
         return None                                  # caller tries the other retrieved chunks
-    return time_of(words, i, "start", step=+1) - 0.3 # nearest word that has a timestamp
-
-def best_window(w, anchor, tiebreak, align="start"):
-    k = len(anchor)
-    scores = [fuzz.ratio(" ".join(w[i:i+k]), " ".join(anchor)) for i in range(len(w) - k + 1)]
-    best = max(scores)
-    tied = [i for i, s in enumerate(scores) if s &gt;= best - 2]
-    # several near-equal positions (repeated phrases): compare a 4x longer window,
-    # extending forwards for the start anchor and backwards for the end anchor
-    return max(tied, key=lambda i: window_score(w, i, tiebreak, align)), scores[...]</code></pre>
-        <ul>
-          <li><strong>Anchors, not sentences.</strong> 12-word windows at the start and end of the quote are unique enough to ignore repeated fillers, and the score is maximised over every position rather than accepting the first that passes a threshold.</li>
-          <li><strong>Tie-breaking.</strong> Positions within 2 points of the best are disambiguated with a 48-word window, aligned forwards for the start and backwards for the end.</li>
-          <li><strong>Robustness.</strong> Missing word timings (speech recognition skips some numbers) fall back to the nearest timed word instead of 0:00; if the chosen chunk scores below 60, all retrieved chunks are searched, which also recovers from the model citing the wrong excerpt number; the displayed quote is extended to at least 30 words of what actually plays.</li>
-        </ul>
-        <p>Benchmarked on 600 passages of 15+ words sampled from real transcripts, each tested verbatim and with five perturbations that mimic model behaviour (punctuation changes, dropped fillers, a skipped middle with "…", a start mid-sentence, small rewording):</p>
+    return time_of(words, i, "start", step=+1) - 0.3 # nearest word that has a timestamp</code></pre>
+        <p>Benchmarked on 600 real transcript passages, verbatim and with perturbations that mimic the model:</p>
         <div class="table-scroll">
           <table class="results">
             <thead><tr><th>Perturbation</th><th>Start within 1 s</th><th>Start off &gt; 5 s</th><th>End within 1.5 s</th></tr></thead>
@@ -212,40 +178,32 @@ def best_window(w, anchor, tiebreak, align="start"):
         </div>
       </section>
 
-
       <section id="evaluation">
         <h2>6 · Evaluation</h2>
-        <p>Every retrieval, prompt and model change was decided by an evaluation harness rather than by spot checks. It has three modes:</p>
-        <ul>
-          <li><strong>Retrieval.</strong> An LLM writes one natural question per randomly sampled chunk (told not to reuse distinctive phrasing, and to skip chunks with no substance), giving a fixed set of 150 questions with a known source chunk. Metrics: hit@1, hit@5, MRR, and "right spot @5" (the source chunk or a neighbour in the top 5). Query rewrites are computed once per configuration and reused, so fusion variants are compared on identical inputs.</li>
-          <li><strong>End to end.</strong> The full pipeline on the same questions: whether the played clip falls inside the source chunk's time range, the rate of "no moment found", unmatched answers, and per-stage latency.</li>
-          <li><strong>Answer quality.</strong> For each configuration, retrieval runs once so all prompts and models see identical excerpts; two judges from different model families score the played transcript 1–5 for directness and whether its first two sentences address the question. The set mixes 70 generated questions with 41 of the app's suggested questions, which are vaguer and have no single correct chunk.</li>
-        </ul>
+        <p>Every change was decided by an evaluation harness, not spot checks. It measures <strong>retrieval</strong> (hit@1, hit@5, MRR on 150 LLM-generated questions with a known source chunk), <strong>end to end</strong> (does the played clip fall inside the source chunk) and <strong>answer quality</strong> (two judges from different model families score directness 1–5, on generated plus real suggested questions).</p>
         <div class="table-scroll">
           <table class="results">
             <thead><tr><th>Change</th><th>Metric</th><th>Before</th><th>After</th><th>n</th></tr></thead>
             <tbody>
               <tr><td>Vote counting → weighted RRF (\(w=3\))</td><td>hit@1 / hit@5</td><td>58% / 86%</td><td class="up">64% / 89%</td><td>150</td></tr>
-              <tr><td>Smaller rewrite model, low reasoning effort, batched queries</td><td>latency (accuracy)</td><td>2.91 s (75%)</td><td class="up">1.34 s (75%)</td><td>150</td></tr>
+              <tr><td>Smaller rewrite model, batched queries</td><td>latency (accuracy)</td><td>2.91 s (75%)</td><td class="up">1.34 s (75%)</td><td>150</td></tr>
               <tr><td>New prompt, Qwen 3.8, next-chunk context</td><td>starts on point</td><td>50%</td><td class="up">73%</td><td>111</td></tr>
               <tr><td>New prompt, Qwen 3.8, next-chunk context</td><td>good answer (≥ 4/5)</td><td>66%</td><td class="up">74%</td><td>111</td></tr>
               <tr><td>MiniLM → bge-m3 (Greek)</td><td>hit@5</td><td>8%</td><td class="up">90%</td><td>100</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="fine">Generated questions are written while looking at the chunk, so they are more specific than real user questions; absolute scores are best read as comparisons between configurations. With n ≈ 100–150, differences under ~5 points are within noise, which is why candidate configurations were re-run head-to-head on the same retrieval before choosing.</p>
-        <p>The finding that reshaped priorities: after the retrieval fixes, end-to-end accuracy didn't move, because the answer model reads all five excerpts and the bottleneck had become whether the right chunk reaches the top 5 at all, and whether the model picks it. That moved effort from ranking to answer selection and context.</p>
+        <p>The key finding: after the retrieval fixes, end-to-end accuracy didn't move. The bottleneck had become whether the right chunk reaches the top 5 and whether the model picks it, which moved the effort to answer selection and context.</p>
       </section>
 
       <section id="performance">
         <h2>7 · Performance</h2>
-        <p>Measured per stage on live searches (mean of four questions each):</p>
         <div class="table-scroll">
           <table class="results">
-            <thead><tr><th>Stage</th><th>English (MiniLM)</th><th>Greek (bge-m3)</th><th>Why Greek is slower</th></tr></thead>
+            <thead><tr><th>Stage (live searches)</th><th>English (MiniLM)</th><th>Greek (bge-m3)</th><th>Why Greek is slower</th></tr></thead>
             <tbody>
-              <tr><td>Query expansion</td><td>0.73 s</td><td>1.96 s</td><td>Greek tokenises into ~2.5× more tokens: ~1,380 output tokens vs ~560</td></tr>
-              <tr><td>Embedding + vector search</td><td>0.68 s</td><td>1.49 s</td><td>bge-m3 has ~25× the parameters of MiniLM</td></tr>
+              <tr><td>Query expansion</td><td>0.73 s</td><td>1.96 s</td><td>~2.5× more tokens per rewrite</td></tr>
+              <tr><td>Embedding + vector search</td><td>0.68 s</td><td>1.49 s</td><td>~25× larger embedding model</td></tr>
               <tr><td>Answer selection</td><td>0.61 s</td><td>0.70 s</td><td>about the same</td></tr>
               <tr><td><strong>Total</strong></td><td><strong>2.05 s</strong></td><td><strong>4.38 s</strong></td><td></td></tr>
             </tbody>
@@ -260,32 +218,15 @@ def best_window(w, anchor, tiebreak, align="start"):
 
       <section id="ops">
         <h2>8 · Serving and operations</h2>
-        <ul>
-          <li><strong>App.</strong> Flask served by waitress; Chroma collections are opened once and shared across request threads. The visitor's chosen person is a cookie and is sent with each search, so concurrent visitors don't share state.</li>
-          <li><strong>Abuse protection.</strong> Every search costs several paid LLM calls, so a sliding-window limiter caps searches at 6 per visitor per minute, 100 per visitor per day and 2,000 site-wide per day, with a 500-character question limit. A <code>.env</code> switch disables it for local development and defaults to on.</li>
-          <li><strong>Configuration.</strong> People are data, not code: each entry sets its transcript folder, embedding model, language, persona for the prompts, page text and suggested questions. Adding a Greek speaker required no code changes beyond making those fields exist.</li>
-          <li><strong>Quality gates.</strong> uv-managed dependencies with a lock-file check, ruff, compile checks and unit tests (timestamp alignment, Greek accent folding, rate limits) run on every push in GitHub Actions.</li>
-        </ul>
+        <p>Flask on waitress, with Chroma collections shared across request threads. Searches are rate-limited per visitor and site-wide, since each one costs several LLM calls. People are configuration, not code (transcripts, embedding model, language, persona, suggested questions), so adding the Greek collection needed no new code paths. Lint, lock-file checks and unit tests run on every push in GitHub Actions.</p>
       </section>
 
       <section id="next">
-        <h2>Limitations and next steps</h2>
+        <h2>Next steps</h2>
         <ul>
-          <li><strong>Cross-encoder re-ranking</strong> of a wider candidate set (e.g. 20 → 5), since the remaining errors are mostly the right chunk missing from the top 5.</li>
-          <li><strong>Sentence-index answers:</strong> number the sentences in each excerpt and have the model return a range instead of copying text. Shorter outputs, exact end times, and no fuzzy matching.</li>
-          <li><strong>Sentence-aware chunking with overlap,</strong> under the embedding model's token limit, instead of fixed 1000-character packing.</li>
-          <li><strong>Lower Greek latency:</strong> fewer or shorter rewrites, or none, now that bge-m3 is strong on the raw question; to be decided with the harness.</li>
-          <li><strong>Speaker attribution:</strong> transcripts don't separate the interviewer from the guest, so a clip can occasionally start on the question rather than the answer.</li>
-        </ul>
-      </section>
-
-      <section id="contribution">
-        <h2>My contributions</h2>
-        <ul>
-          <li>The evaluation harness (retrieval, end-to-end and LLM-judged answer quality) and the retrieval, prompt and model changes it drove.</li>
-          <li>The timestamp-alignment algorithm and its benchmark.</li>
-          <li>Multilingual support and the Greek collection: per-person embedding models, language-aware prompts, caption parsing and the Whisper ingestion path.</li>
-          <li>The ingestion pipeline: discovery, de-duplication and playability checks, and the redesigned interface.</li>
+          <li><strong>Cross-encoder re-ranking</strong> of a wider candidate set, since most remaining errors are the right chunk missing from the top 5.</li>
+          <li><strong>Sentence-index answers:</strong> the model returns a sentence range instead of copying text, giving exact start and end times with no fuzzy matching.</li>
+          <li><strong>Speaker attribution,</strong> so a clip never starts on the interviewer's question.</li>
         </ul>
         <div class="callout">The code is in a private repository, so there's no public link. I'm happy to walk through the architecture or give a live demo: <a href="mailto:panoskolyvakis@gmail.com?subject=Q%26AI">get in touch</a>.</div>
       </section>
