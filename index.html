@@ -139,9 +139,7 @@
         </div>
         <div class="projects">
           <article class="card card-featured reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="12" width="40" height="28" rx="4"/><path d="m22 20 10 6-10 6z"/><circle cx="44" cy="44" r="9"/><path d="m51 51 7 7"/></svg>
-            </div>
+            <div class="card-media"><img src="assets/img/qandai/demo-poster.jpg" width="1200" height="682" loading="lazy" alt="The Q&amp;AI app playing the moment in an interview that answers the question, with the quoted transcript"></div>
             <div class="card-body">
               <span class="card-kicker">Case study · RAG over video</span>
               <h3>Q&amp;AI</h3>
@@ -155,8 +153,18 @@
             </div>
           </article>
           <article class="card reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6 10 14v16c0 14 9.5 23 22 28 12.5-5 22-14 22-28V14z"/><path d="m22 32 7 7 13-14"/></svg>
+            <div class="card-media is-illustration" role="img" aria-label="Illustrative example of a Rego guardrail policy and an OPA decision">
+              <pre class="mini-code"><span class="c"># illustrative example</span>
+<span class="k">package</span> agent.guardrails
+
+<span class="k">default</span> allow := <span class="n">false</span>
+
+allow <span class="k">if</span> {
+  input.tool <span class="k">in</span> data.client.approved_tools
+  <span class="k">not</span> exceeds_spend_limit
+}</pre>
+              <div class="mini-decision"><span>OPA decision</span><b>allow</b><span>audit log ✓</span></div>
+              <span class="mini-label">Illustrative</span>
             </div>
             <div class="card-body">
               <span class="card-kicker">Kyndryl · Agentic AI governance</span>
@@ -168,8 +176,19 @@
           </article>
 
           <article class="card reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="7"/><circle cx="12" cy="14" r="5"/><circle cx="52" cy="14" r="5"/><circle cx="12" cy="50" r="5"/><circle cx="52" cy="50" r="5"/><path d="m16 18 10 9M48 18l-10 9M16 46l10-9M48 46l-10-9"/></svg>
+            <div class="card-media is-illustration" role="img" aria-label="Illustrative architecture: an orchestrator calls tools through an MCP gateway and registry, with telemetry flowing to Prometheus and Grafana">
+              <svg class="mini-arch" viewBox="0 0 560 232" aria-hidden="true">
+                <g class="box"><rect x="16" y="86" width="104" height="60" rx="10"/><text x="68" y="112">Agent</text><text class="s" x="68" y="130">memory · tools</text></g>
+                <g class="box accent"><rect x="160" y="86" width="116" height="60" rx="10"/><text x="218" y="112">Orchestrator</text><text class="s" x="218" y="130">function calling</text></g>
+                <g class="box"><rect x="316" y="86" width="104" height="60" rx="10"/><text x="368" y="112">MCP Gateway</text><text class="s" x="368" y="130">+ Registry</text></g>
+                <g class="box"><rect x="460" y="24" width="84" height="40" rx="8"/><text x="502" y="49">MCP server</text></g>
+                <g class="box"><rect x="460" y="96" width="84" height="40" rx="8"/><text x="502" y="121">MCP server</text></g>
+                <g class="box"><rect x="460" y="168" width="84" height="40" rx="8"/><text x="502" y="193">MCP server</text></g>
+                <g class="line"><path d="M120 116h40M276 116h40M420 116c20 0 20-72 40-72M420 116h40M420 116c20 0 20 72 40 72"/></g>
+                <g class="box dim"><rect x="140" y="180" width="160" height="36" rx="8"/><text x="220" y="203">OTel → Prometheus · Mimir</text></g>
+                <g class="line dash"><path d="M218 146v34"/></g>
+              </svg>
+              <span class="mini-label">Illustrative</span>
             </div>
             <div class="card-body">
               <span class="card-kicker">Kyndryl · Framework from scratch</span>
@@ -196,9 +215,7 @@
           </article>
 
           <article class="card reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="48" height="34" rx="4"/><path d="M24 54h16M32 46v8"/><path d="M18 22h10M18 22v8M46 36h-10M46 36v-8" stroke-dasharray="3 3"/><path d="M38 20l-8 12h8l-8 12" stroke-width="2.6"/></svg>
-            </div>
+            <div class="card-media"><img src="assets/img/projects/snipping-tool.jpg" width="1600" height="667" loading="lazy" alt="The tool's four steps: a screenshot of a coding question, the prompt picker window, the OCR text ready to edit, and the LLM's answer with code"></div>
             <div class="card-body">
               <span class="card-kicker">Cross-platform tool</span>
               <h3>Keyboard-SnippingTool-ToGPT</h3>
@@ -212,9 +229,7 @@
           </article>
 
           <article class="card reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 40c6 0 6-4 12-4s6 4 12 4 6-4 12-4 6 4 12 4 4-2 4-2"/><path d="M6 50c6 0 6-4 12-4s6 4 12 4 6-4 12-4 6 4 12 4 4-2 4-2"/><path d="M22 34l10-20 10 20z"/><path d="M32 14v-6"/></svg>
-            </div>
+            <div class="card-media"><img src="assets/img/projects/spartan.jpg" width="1400" height="583" loading="lazy" alt="A Spartan Engine scene at sunset: an island coastline with water"></div>
             <div class="card-body">
               <span class="card-kicker">Open source · C++</span>
               <h3>Spartan Engine</h3>
@@ -228,9 +243,7 @@
           </article>
 
           <article class="card reveal">
-            <div class="card-media is-pattern" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="18" r="5"/><circle cx="14" cy="46" r="5"/><circle cx="32" cy="12" r="5"/><circle cx="32" cy="32" r="5"/><circle cx="32" cy="52" r="5"/><circle cx="50" cy="32" r="5"/><path d="M19 18l8-5M19 19l8 11M19 45l8-11M19 46l8 5M37 13l9 16M37 32h8M37 51l9-16"/></svg>
-            </div>
+            <div class="card-media"><img src="assets/img/projects/ml-projects.jpg" width="1600" height="667" loading="lazy" alt="Outputs from the notebooks: ovarian cancer tissue images, a confusion matrix of the CNN classifier, and ROC curves comparing classifiers"></div>
             <div class="card-body">
               <span class="card-kicker">Machine learning</span>
               <h3>Machine learning projects</h3>
