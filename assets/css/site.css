@@ -444,7 +444,7 @@ pre code.hljs { padding: 0; background: transparent; }
 
 /* "Then → now" strip on early projects (index.html) */
 .ahead { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
-.ahead > div { position: relative; padding: 10px 12px; }
+.ahead > div { position: relative; padding: 12px 14px; }
 .ahead > div:first-child { background: var(--accent-soft); color: var(--text); }
 .ahead > div + div { border-left: 1px solid var(--line); }
 .ahead > div:first-child::after {
@@ -452,7 +452,7 @@ pre code.hljs { padding: 0; background: transparent; }
   width: 20px; height: 20px; display: grid; place-items: center; font-size: 12px; border-radius: 999px;
   background: var(--surface); border: 1px solid var(--line); color: var(--accent);
 }
-.ahead b { display: block; margin-bottom: 2px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.ahead b { display: block; margin-bottom: 8px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
 @media (max-width: 520px) {
   .ahead { grid-template-columns: 1fr; }
   .ahead > div + div { border-left: 0; border-top: 1px solid var(--line); }
