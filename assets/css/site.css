@@ -381,12 +381,14 @@ pre code.hljs { padding: 0; background: transparent; }
 
 /* Featured project card spans the grid and lays out side by side on wide screens */
 .card-featured { grid-column: 1 / -1; flex-direction: row; }
-.card-featured .card-media { aspect-ratio: auto; width: 38%; flex: none; border-bottom: 0; border-right: 1px solid var(--line); }
+.card-featured .card-media { aspect-ratio: auto; width: 46%; flex: none; border-bottom: 0; border-right: 1px solid var(--line); }
+.card-featured .card-media:not(.is-pattern) { display: flex; align-items: center; padding: 14px; }
+.card-featured .card-media img { height: auto; object-fit: contain; border-radius: 8px; border: 1px solid var(--line); }
 .card-featured .card-media.is-pattern svg { width: 72px; height: 72px; }
 .card-featured h3 { font-size: 1.6rem; }
 @media (max-width: 720px) {
   .card-featured { flex-direction: column; }
-  .card-featured .card-media { width: auto; aspect-ratio: 2.4 / 1; border-right: 0; border-bottom: 1px solid var(--line); }
+  .card-featured .card-media { width: auto; aspect-ratio: auto; border-right: 0; border-bottom: 1px solid var(--line); }
 }
 
 /* Contents bar and architecture diagram (q-and-ai.html) */
